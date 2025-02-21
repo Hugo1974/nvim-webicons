@@ -68,6 +68,15 @@ return {
 
 This will extend the existing icon set with custom user-defined icons.
 
+And add to config/init.lua this lines:
+
+```
+local user_config = require("config.nvim-webicons") -- Cargar la configuración del usuario
+require("nvim-webicons").setup(user_config) -- Aplicar la configuración personalizada
+
+```
+
+
 ## Usage
 
 Once installed and configured, the icons will be available for use in your Neovim setup.
