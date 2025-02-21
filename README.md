@@ -19,3 +19,4 @@ use({
 })
 ```
 # nvim.webicons
+# nvim.webicons
