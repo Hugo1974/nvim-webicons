@@ -8,7 +8,7 @@ A Neovim plugin for managing and displaying custom icons in your editor.
 
 ```lua
 {
-  "tu_usuario/nvim-webicons-custom",
+  "Hugo1974/nvim-webicons",
   config = function()
     require("nvim-webicons").setup()
   end
@@ -19,7 +19,7 @@ A Neovim plugin for managing and displaying custom icons in your editor.
 
 ```lua
 use {
-  "tu_usuario/nvim-webicons-custom",
+  "Hugo1974/nvim-webicons",
   config = function()
     require("nvim-webicons").setup()
   end
@@ -29,7 +29,7 @@ use {
 ### Using `vim-plug`
 
 ```vim
-Plug 'tu_usuario/nvim-webicons-custom'
+Plug 'Hugo1974/nvim-webicons'
 ```
 
 After installing, add the following to your `init.lua` or `init.vim`:
