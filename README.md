@@ -76,6 +76,20 @@ require("nvim-webicons").setup(user_config) -- Apply user config
 
 ```
 
+### Add custom keymap
+
+lua/config/keymaps.lua:
+
+```
+Webicons = require("nvim-webicons") -- No necesitas llamar a setup() directamente aquí
+vim.api.nvim_set_keymap(
+  "n",
+  "<leader>mi",
+  ":lua Webicons.start()<CR>",
+  { noremap = true, silent = true, desc = "Insert icon" }
+)
+
+```
 
 ## Usage
 
