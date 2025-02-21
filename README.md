@@ -71,9 +71,9 @@ This will extend the existing icon set with custom user-defined icons.
 
 ### Add custom keymap
 
-lua/config/keymaps.lua:
+Edit or create file `nvim/lua/config/keymaps.lua` and add:
 
-```
+```lua
 Webicons = require("nvim-webicons")
 vim.api.nvim_set_keymap(
   "n",
