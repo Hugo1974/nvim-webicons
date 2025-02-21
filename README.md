@@ -35,7 +35,8 @@ Plug 'Hugo1974/nvim-webicons'
 After installing, add the following to your `init.lua` or `init.vim`:
 
 ```lua
-require("nvim-webicons").setup()
+local user_config = require("config.nvim-webicons") -- Load user config
+require("nvim-webicons").setup(user_config) -- Apply user config
 ```
 
 ## User Configuration
@@ -67,13 +68,6 @@ return {
 ```
 
 This will extend the existing icon set with custom user-defined icons.
-
-And add to config/init.lua this lines:
-
-```
-local user_config = require("config.nvim-webicons") -- Load user config
-require("nvim-webicons").setup(user_config) -- Apply user config
-```
 
 ### Add custom keymap
 
