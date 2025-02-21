@@ -71,8 +71,8 @@ This will extend the existing icon set with custom user-defined icons.
 And add to config/init.lua this lines:
 
 ```
-local user_config = require("config.nvim-webicons") -- Cargar la configuración del usuario
-require("nvim-webicons").setup(user_config) -- Aplicar la configuración personalizada
+local user_config = require("config.nvim-webicons") -- Load user config
+require("nvim-webicons").setup(user_config) -- Apply user config
 
 ```
 
