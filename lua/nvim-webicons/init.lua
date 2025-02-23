@@ -13,16 +13,29 @@ end
 -- Función para calcular la posición centrada
 local function calculate_center_position(width, height)
 	local ui = vim.api.nvim_list_uis()[1]
-	local row = math.floor(1)
+	local row = math.floor((ui.height - height) / 2)
 	local col = math.floor((ui.width - width) / 2)
 	return row, col
 end
 
+local function get_max_width(items)
+	local max_width = 0
+	for _, item in ipairs(items) do
+		local width = vim.fn.strdisplaywidth(item) -- Cuenta caracteres visuales
+		if width > max_width then
+			max_width = width
+		end
+	end
+	return max_width
+end
 -- Función para mostrar un popup con una lista de elementos
 function M.show_popup(items, callback, is_submenu)
 	local buf = vim.api.nvim_create_buf(false, true)
-	local width = 50
-	local height = #items
+	-- local width = get_max_width(items) + 10
+	-- local height = #items
+	local width = 90
+	local height = 30
+
 	local row, col = calculate_center_position(width, height)
 
 	local win = vim.api.nvim_open_win(buf, true, {
@@ -75,28 +88,56 @@ local function sort_table(t)
 	return sorted_keys
 end
 
--- Función para manejar la selección de un elemento
 function M.handle_selection(selection)
 	if M.data[selection] then
 		local sub_items = {}
 		local sorted_keys = sort_table(M.data[selection])
 		for _, key in ipairs(sorted_keys) do
-			table.insert(sub_items, M.data[selection][key] .. " " .. key)
+			table.insert(sub_items, " " .. M.data[selection][key] .. " " .. key) -- Espacio al inicio
 		end
 
 		M.show_popup(sub_items, function(item)
-			local content = item:match("^(.-) ")
+			local content = item:match("^%s*(.-) ") -- Captura correctamente el emoji sin el espacio extra
 			vim.api.nvim_put({ content }, "c", true, true)
 			vim.api.nvim_feedkeys("a ", "n", false)
-		end, true) -- Indicar que es un submenú
+		end, true)
 	end
 end
 
--- Función principal para iniciar el popup
+-- Función para manejar la selección de un elemento
+-- function M.handle_selection(selection)
+-- 	if M.data[selection] then
+-- 		local sub_items = {}
+-- 		local sorted_keys = sort_table(M.data[selection])
+-- 		for _, key in ipairs(sorted_keys) do
+-- 			table.insert(sub_items, M.data[selection][key] .. " " .. key)
+-- 		end
+--
+-- 		M.show_popup(sub_items, function(item)
+-- 			local content = item:match("^(.-) ")
+-- 			vim.api.nvim_put({ content }, "c", true, true)
+-- 			vim.api.nvim_feedkeys("a ", "n", false)
+-- 		end, true) -- Indicar que es un submenú
+-- 	end
+-- end
+
 function M.start()
-	local main_items = vim.tbl_keys(M.data)
+	local main_items = {}
+	for _, key in ipairs(vim.tbl_keys(M.data)) do
+		table.insert(main_items, " " .. key) -- Agrega un espacio antes de los emojis
+	end
 	table.sort(main_items)
-	M.show_popup(main_items, M.handle_selection)
+
+	M.show_popup(main_items, function(item)
+		local clean_selection = item:match("^%s*(.-)$") -- Elimina el espacio extra
+		M.handle_selection(clean_selection)
+	end)
 end
+-- Función principal para iniciar el popup
+-- function M.start()
+-- 	local main_items = vim.tbl_keys(M.data)
+-- 	table.sort(main_items)
+-- 	M.show_popup(main_items, M.handle_selection)
+-- end
 
 return M
