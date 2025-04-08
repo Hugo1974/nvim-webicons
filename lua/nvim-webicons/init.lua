@@ -10,6 +10,13 @@ function M.setup(user_config)
 	end
 end
 
+-- Resto del código permanece igual...
+function M.setup(user_config)
+	if user_config and user_config.data then
+		M.data = vim.tbl_deep_extend("force", M.data or {}, user_config.data)
+	end
+end
+
 -- Función para calcular la posición centrada
 local function calculate_center_position(width, height)
 	local ui = vim.api.nvim_list_uis()[1]
@@ -81,17 +88,50 @@ end
 function M.handle_selection(selection)
 	if M.data[selection] then
 		local sub_items = {}
-		local sorted_keys = sort_table(M.data[selection])
-		for _, key in ipairs(sorted_keys) do
-			table.insert(sub_items, " " .. M.data[selection][key] .. " " .. key) -- Espacio al inicio
+
+		-- Primero mostramos las categorías principales de Manos
+		if selection == "✋ Manos" then
+			for category, _ in pairs(M.data[selection]) do
+				table.insert(sub_items, " " .. category)
+			end
+		else
+			-- Luego mostramos los items de cada categoría
+			local sorted_keys = sort_table(M.data[selection])
+			for _, key in ipairs(sorted_keys) do
+				table.insert(sub_items, " " .. M.data[selection][key] .. " " .. key)
+			end
 		end
 
 		M.show_popup(sub_items, function(item)
-			local content = item:match("^%s*(.-) ") -- Captura correctamente el emoji sin el espacio extra
-			vim.api.nvim_put({ content }, "c", true, true)
-			vim.api.nvim_feedkeys("a ", "n", false)
+			local clean_item = item:match("^%s*(.-)$")
+
+			if selection == "✋ Manos" then
+				-- Si estamos en el menú principal de Manos, manejamos la selección de categoría
+				M.handle_category_selection(selection, clean_item)
+			else
+				-- Si estamos en una categoría, insertamos el emoji
+				local content = item:match("^%s*(.-) ") or clean_item
+				vim.api.nvim_put({ content }, "c", true, true)
+				vim.api.nvim_feedkeys("a ", "n", false)
+			end
 		end, true)
 	end
+end
+
+-- Nueva función para manejar la selección de categorías
+function M.handle_category_selection(parent_category, category)
+	local sub_items = {}
+	local sorted_keys = sort_table(M.data[parent_category][category])
+
+	for _, key in ipairs(sorted_keys) do
+		table.insert(sub_items, " " .. M.data[parent_category][category][key] .. " " .. key)
+	end
+
+	M.show_popup(sub_items, function(item)
+		local content = item:match("^%s*(.-) ") or item:match("^%s*(.-)$")
+		vim.api.nvim_put({ content }, "c", true, true)
+		vim.api.nvim_feedkeys("a ", "n", false)
+	end, true)
 end
 
 function M.start()

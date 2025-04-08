@@ -345,7 +345,7 @@ M.data = {
 	["✋ Manos"] = {
 		["👋 Gestos"] = {
 			saludar = "👋", -- Mover la mano (hola/adiós)
-			paz = "✌️", -- Signo de paz/victoria
+			paz = " ✌️", -- Signo de paz/victoria
 			ok = "👌", -- Gestos de aprobación
 			pulgar_arriba = "👍", -- De acuerdo/bien
 			pulgar_abajo = "👎", -- En desacuerdo/mal
@@ -364,18 +364,17 @@ M.data = {
 			rezar = "🙏", -- Oración/agradecimiento
 			["apretón_manos"] = "🤝", -- Saludo/acuerdo
 			chocar_los_cinco = "✋", -- Celebración
-			escribir = "✍️", -- Acción de escribir
+			escribir = " ✍️", -- Acción de escribir
 			agarrar = "🫴", -- Tomar/sostener algo
-			mano_abierta = "🖐️", -- Mano extendida
+			mano_abierta = " 🖐️", -- Mano extendida
 			palmas_arriba = "🤲", -- Ofrecer/recibir
-			palmas_abajo = "🖐️", -- Mano hacia abajo
 		},
 
-		["🖐️ Variaciones"] = {
+		["🫲 Variaciones"] = {
 			mano_izquierda = "🫲", -- Orientación izquierda
 			mano_derecha = "🫱", -- Orientación derecha
 			detener = "✋", -- Señal de stop
-			dedos_separados = "🖐️", -- Mano abierta con dedos abiertos
+			dedos_separados = " 🖐️", -- Mano abierta con dedos abiertos
 			gesto_ofensivo = "🖕", -- Gestos groseros (opcional)
 		},
 	},
