@@ -342,6 +342,43 @@ M.data = {
 		lienzo = "🖼️",
 		paleta = "🎨",
 	},
+	["✋ Manos"] = {
+		["👋 Gestos"] = {
+			saludar = "👋", -- Mover la mano (hola/adiós)
+			paz = "✌️", -- Signo de paz/victoria
+			ok = "👌", -- Gestos de aprobación
+			pulgar_arriba = "👍", -- De acuerdo/bien
+			pulgar_abajo = "👎", -- En desacuerdo/mal
+			["señalar"] = "👉", -- Indicar dirección
+			["puño"] = "✊", -- Fuerza/determinación
+			mano_alzada = "✋", -- Detener/preguntar
+			aplaudir = "👏", -- Aplausos
+			te_quiero = "🤟", -- Lenguaje de señas "te quiero"
+			llamame = "🤙", -- Gestos de "llámame"
+			rock = "🤘", -- Gestos de música rock
+			cruzar_dedos = "🤞", -- Para desear suerte
+			pellizco = "🤏", -- Algo pequeño/precisión
+		},
+
+		["🙏 Acciones"] = {
+			rezar = "🙏", -- Oración/agradecimiento
+			["apretón_manos"] = "🤝", -- Saludo/acuerdo
+			chocar_los_cinco = "✋", -- Celebración
+			escribir = "✍️", -- Acción de escribir
+			agarrar = "🫴", -- Tomar/sostener algo
+			mano_abierta = "🖐️", -- Mano extendida
+			palmas_arriba = "🤲", -- Ofrecer/recibir
+			palmas_abajo = "🖐️", -- Mano hacia abajo
+		},
+
+		["🖐️ Variaciones"] = {
+			mano_izquierda = "🫲", -- Orientación izquierda
+			mano_derecha = "🫱", -- Orientación derecha
+			detener = "✋", -- Señal de stop
+			dedos_separados = "🖐️", -- Mano abierta con dedos abiertos
+			gesto_ofensivo = "🖕", -- Gestos groseros (opcional)
+		},
+	},
 }
 
 -- Función para permitir al usuario sobrescribir la configuración
