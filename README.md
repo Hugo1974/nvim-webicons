@@ -41,11 +41,7 @@ require("nvim-webicons").setup(user_config) -- Apply user config
 
 ## User Configuration
 
-User configuration should be placed in:
-
-```
-nvim/lua/config/nvim-webicons.lua
-```
+User configuration should be placed in `nvim/lua/config/nvim-webicons.lua`
 
 ### Example Configuration
 
