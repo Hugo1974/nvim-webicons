@@ -18,16 +18,6 @@ local function calculate_center_position(width, height)
 	return row, col
 end
 
-local function get_max_width(items)
-	local max_width = 0
-	for _, item in ipairs(items) do
-		local width = vim.fn.strdisplaywidth(item) -- Cuenta caracteres visuales
-		if width > max_width then
-			max_width = width
-		end
-	end
-	return max_width
-end
 -- Función para mostrar un popup con una lista de elementos
 function M.show_popup(items, callback, is_submenu)
 	local buf = vim.api.nvim_create_buf(false, true)
@@ -104,23 +94,6 @@ function M.handle_selection(selection)
 	end
 end
 
--- Función para manejar la selección de un elemento
--- function M.handle_selection(selection)
--- 	if M.data[selection] then
--- 		local sub_items = {}
--- 		local sorted_keys = sort_table(M.data[selection])
--- 		for _, key in ipairs(sorted_keys) do
--- 			table.insert(sub_items, M.data[selection][key] .. " " .. key)
--- 		end
---
--- 		M.show_popup(sub_items, function(item)
--- 			local content = item:match("^(.-) ")
--- 			vim.api.nvim_put({ content }, "c", true, true)
--- 			vim.api.nvim_feedkeys("a ", "n", false)
--- 		end, true) -- Indicar que es un submenú
--- 	end
--- end
-
 function M.start()
 	local main_items = {}
 	for _, key in ipairs(vim.tbl_keys(M.data)) do
@@ -133,11 +106,5 @@ function M.start()
 		M.handle_selection(clean_selection)
 	end)
 end
--- Función principal para iniciar el popup
--- function M.start()
--- 	local main_items = vim.tbl_keys(M.data)
--- 	table.sort(main_items)
--- 	M.show_popup(main_items, M.handle_selection)
--- end
 
 return M
