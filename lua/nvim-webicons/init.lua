@@ -93,34 +93,49 @@ end
 local function build_popup_line(emoji, text)
 	return string.format(" %s %s", tostring(emoji or ""), tostring(text or ""))
 end
+-- Función para construir líneas del popup con padding consistente
+local function build_popup_lines(data)
+	local lines = {}
+	local keys = sort_table(data)
 
-function M.handle_selection(selection)
-	if not M.data[selection] then
-		return
-	end
-
-	local sub_items = {}
-
-	-- Menú principal de "✋ Manos"
-	if selection == "✋ Manos" then
-		for _, category in ipairs(sort_table(M.data[selection])) do
-			table.insert(sub_items, " " .. category)
-		end
-	else
-		-- Submenús
-		for _, key in ipairs(sort_table(M.data[selection])) do
-			table.insert(sub_items, build_popup_line(M.data[selection][key], key))
+	-- Paso 1: encontrar la longitud máxima del icono (en caracteres visuales)
+	local max_icon_width = 0
+	for _, key in ipairs(keys) do
+		local value = data[key]
+		local icon = type(value) == "table" and "" or value
+		local width = vim.fn.strdisplaywidth(tostring(icon or ""))
+		if width > max_icon_width then
+			max_icon_width = width
 		end
 	end
 
-	M.show_popup(sub_items, function(item)
-		local clean_item = item:match("^%s*(.-)$")
+	-- Paso 2: construir líneas con padding
+	for _, key in ipairs(keys) do
+		local value = data[key]
+		local icon = type(value) == "table" and "" or value
+		local icon_str = tostring(icon or "")
+		local padding = max_icon_width - vim.fn.strdisplaywidth(icon_str)
+		local padded_icon = icon_str .. string.rep(" ", padding)
+		table.insert(lines, string.format(" %s  %s", padded_icon, key))
+	end
 
-		if selection == "✋ Manos" then
-			M.handle_category_selection(selection, clean_item)
+	return lines
+end
+
+-- Función genérica para manejar selección de cualquier nivel
+function M.handle_selection(current_data)
+	local items = build_popup_lines(current_data)
+
+	M.show_popup(items, function(item)
+		local clean_key = item:match("^%s*.-%s+(.-)%s*$")
+
+		if type(current_data[clean_key]) == "table" then
+			-- Submenú: llamada recursiva
+			M.handle_selection(current_data[clean_key])
 		else
-			local content = item:match("^%s*(.-)%s") or clean_item
-			vim.api.nvim_put({ content }, "c", true, true)
+			-- Acción final
+			local icon = item:match("^%s*(.-)%s") or ""
+			vim.api.nvim_put({ icon }, "c", true, true)
 			vim.api.nvim_feedkeys("a ", "n", false)
 		end
 	end, true)
@@ -144,15 +159,7 @@ function M.handle_category_selection(parent_category, category)
 end
 
 function M.start()
-	local main_items = {}
-	for _, key in ipairs(sort_table(M.data)) do
-		table.insert(main_items, " " .. key)
-	end
-
-	M.show_popup(main_items, function(item)
-		local clean_selection = item:match("^%s*(.-)$")
-		M.handle_selection(clean_selection)
-	end)
+	M.handle_selection(M.data)
 end
 
 return M
