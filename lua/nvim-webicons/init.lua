@@ -10,13 +10,6 @@ function M.setup(user_config)
 	end
 end
 
--- Resto del código permanece igual...
-function M.setup(user_config)
-	if user_config and user_config.data then
-		M.data = vim.tbl_deep_extend("force", M.data or {}, user_config.data)
-	end
-end
-
 -- Función para calcular la posición centrada
 local function calculate_center_position(width, height)
 	local ui = vim.api.nvim_list_uis()[1]
