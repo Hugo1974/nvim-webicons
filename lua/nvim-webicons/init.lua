@@ -75,60 +75,69 @@ function M.show_popup(items, callback, is_submenu)
 	end
 end
 
--- Función para ordenar una tabla alfabéticamente
+-- Función mejorada para ordenar tablas (maneja nil y tipos mixtos)
 local function sort_table(t)
+	if not t then
+		return {}
+	end
+
 	local sorted_keys = {}
 	for key in pairs(t) do
-		table.insert(sorted_keys, key)
+		table.insert(sorted_keys, tostring(key)) -- Convertimos todo a string para ordenar
 	end
 	table.sort(sorted_keys)
 	return sorted_keys
 end
 
-function M.handle_selection(selection)
-	if M.data[selection] then
-		local sub_items = {}
-
-		-- Primero mostramos las categorías principales de Manos
-		if selection == "✋ Manos" then
-			for category, _ in pairs(M.data[selection]) do
-				table.insert(sub_items, " " .. category)
-			end
-		else
-			-- Luego mostramos los items de cada categoría
-			local sorted_keys = sort_table(M.data[selection])
-			for _, key in ipairs(sorted_keys) do
-				table.insert(sub_items, " " .. M.data[selection][key] .. " " .. key)
-			end
-		end
-
-		M.show_popup(sub_items, function(item)
-			local clean_item = item:match("^%s*(.-)$")
-
-			if selection == "✋ Manos" then
-				-- Si estamos en el menú principal de Manos, manejamos la selección de categoría
-				M.handle_category_selection(selection, clean_item)
-			else
-				-- Si estamos en una categoría, insertamos el emoji
-				local content = item:match("^%s*(.-) ") or clean_item
-				vim.api.nvim_put({ content }, "c", true, true)
-				vim.api.nvim_feedkeys("a ", "n", false)
-			end
-		end, true)
-	end
+-- Función para construir líneas del popup de forma consistente
+local function build_popup_line(emoji, text)
+	return string.format(" %s %s", tostring(emoji or ""), tostring(text or ""))
 end
 
--- Nueva función para manejar la selección de categorías
-function M.handle_category_selection(parent_category, category)
-	local sub_items = {}
-	local sorted_keys = sort_table(M.data[parent_category][category])
+function M.handle_selection(selection)
+	if not M.data[selection] then
+		return
+	end
 
-	for _, key in ipairs(sorted_keys) do
-		table.insert(sub_items, " " .. M.data[parent_category][category][key] .. " " .. key)
+	local sub_items = {}
+
+	-- Menú principal de "✋ Manos"
+	if selection == "✋ Manos" then
+		for _, category in ipairs(sort_table(M.data[selection])) do
+			table.insert(sub_items, " " .. category)
+		end
+	else
+		-- Submenús
+		for _, key in ipairs(sort_table(M.data[selection])) do
+			table.insert(sub_items, build_popup_line(M.data[selection][key], key))
+		end
 	end
 
 	M.show_popup(sub_items, function(item)
-		local content = item:match("^%s*(.-) ") or item:match("^%s*(.-)$")
+		local clean_item = item:match("^%s*(.-)$")
+
+		if selection == "✋ Manos" then
+			M.handle_category_selection(selection, clean_item)
+		else
+			local content = item:match("^%s*(.-)%s") or clean_item
+			vim.api.nvim_put({ content }, "c", true, true)
+			vim.api.nvim_feedkeys("a ", "n", false)
+		end
+	end, true)
+end
+
+function M.handle_category_selection(parent_category, category)
+	if not M.data[parent_category] or not M.data[parent_category][category] then
+		return
+	end
+
+	local sub_items = {}
+	for _, key in ipairs(sort_table(M.data[parent_category][category])) do
+		table.insert(sub_items, build_popup_line(M.data[parent_category][category][key], key))
+	end
+
+	M.show_popup(sub_items, function(item)
+		local content = item:match("^%s*(.-)%s") or item:match("^%s*(.-)$")
 		vim.api.nvim_put({ content }, "c", true, true)
 		vim.api.nvim_feedkeys("a ", "n", false)
 	end, true)
@@ -136,13 +145,12 @@ end
 
 function M.start()
 	local main_items = {}
-	for _, key in ipairs(vim.tbl_keys(M.data)) do
-		table.insert(main_items, " " .. key) -- Agrega un espacio antes de los emojis
+	for _, key in ipairs(sort_table(M.data)) do
+		table.insert(main_items, " " .. key)
 	end
-	table.sort(main_items)
 
 	M.show_popup(main_items, function(item)
-		local clean_selection = item:match("^%s*(.-)$") -- Elimina el espacio extra
+		local clean_selection = item:match("^%s*(.-)$")
 		M.handle_selection(clean_selection)
 	end)
 end
