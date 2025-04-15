@@ -378,8 +378,73 @@ M.data = {
 			gesto_ofensivo = "🖕", -- Gestos groseros (opcional)
 		},
 	},
-}
+	["🚀 Devicons"] = {
+		["🔧 Señales"] = {
+			Error = "❌ ",
+			Advertencia = "⚠️ ",
+			["Éxito"] = "✅ ",
+			["Información"] = "ℹ️ ",
+			Sugerencia = "💡 ",
+		},
 
+		["🔍 Búsqueda"] = {
+			Buscar = "🔍 ",
+			Encontrar = "🔎 ",
+			Coincidencia = "📌 ",
+			Reemplazar = "🔄 ",
+		},
+
+		["💻 Código"] = {
+			["Código"] = "💻 ",
+			Error = "🐛 ",
+			["Corrección"] = "🔧 ",
+			Refactorizar = "♻️ ",
+			Prueba = "🧪 ",
+			Depurar = "🐞 ",
+		},
+
+		["📁 Archivos"] = {
+			Archivo = "📄 ",
+			Carpeta = "📁 ",
+			Abrir = "📂 ",
+			Nuevo = "🆕 ",
+			Guardar = "💾 ",
+		},
+
+		["🚀 Acciones"] = {
+			Ejecutar = "🚀 ",
+			Compilar = "🔨 ",
+			Detener = "⏹️ ",
+			Iniciar = "▶️ ",
+			Pausar = "⏸️ ",
+		},
+
+		["🔗 Control de Versiones"] = {
+			Git = "󰊢 ",
+			Rama = " ",
+			Commit = " ",
+			Fusionar = " ",
+			Descargar = " ",
+			Subir = " ",
+		},
+
+		["📊 Interfaz"] = {
+			Visible = "👁️ ",
+			Oculto = "👁️_✗ ",
+			Bloqueado = "🔒 ",
+			Desbloqueado = "🔓 ",
+			["Configuración"] = "⚙️ ",
+		},
+
+		["🌐 Web"] = {
+			Navegador = "🌐 ",
+			Servidor = "🖥️ ",
+			Cliente = "👨‍💻 ",
+			API = "🔌 ",
+			BaseDeDatos = "🗄️ ",
+		},
+	},
+}
 -- Función para permitir al usuario sobrescribir la configuración
 function M.setup(user_config)
 	if user_config and user_config.data then
